@@ -50,9 +50,14 @@
                     }
             });
             if(response){
-                container.innerHTML = `<h5>${response}</h5>`;
+                let arrayData = response.split(",");
+                arrayData.forEach(data =>{
+                    let info = document.createElement("h5");
+                    info.innerText = data;
+                    container.appendChild(info)
+                })
             }else{
-                container.innerHTML = `<h5>Can not connect to to ${testUrl} or get data, try another URL.</h5>`;
+                container.innerHTML = `<h5>Connected but no data from ${testUrl}, try another URL.</h5>`;
             }
         }
     </script>
