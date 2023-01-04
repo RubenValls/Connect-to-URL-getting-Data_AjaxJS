@@ -10,14 +10,14 @@
     <div class="container-fluid bg-dark text-white p-1 text-center">
         <h1>Get Info from URL</h1>
     </div>
-    <div class="container m-2 p-2">
-        <form>
+    <div class="container m-2 p-2 m-auto">
+        <form class="text-center">
             <label for="url" class="form-label m-2">URL:</label>
             <input type="url" class="form-control m-2" id="url" placeholder="https://example.com" required>
             <button class="btn btn-primary m-2" id="submit">Submit</button>
         </form>
     </div>
-    <div class="container-fluid" id="info"></div>
+    <div class="container-fluid text-center" id="info"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script>
@@ -41,24 +41,31 @@
         function connectTo(testUrl){
             let response = '';
             let container = document.querySelector('#info');
-            $.ajax({ type: "GET",   
-                    url: testUrl,   
-                    async: false,
-                    success : function(text)
-                    {
-                        response = JSON.stringify(text);
+            $.get(testUrl, function(data,status){
+                    let web = document.createElement('h3');
+                    web.classList.add('text-center');
+                    web.classList.add('p-1');
+                    web.innerText = `Connected to ${testUrl} and Status: ${status}.`;
+                    container.appendChild(web);
+                    $.ajax({ type: "GET",   
+                        url: testUrl,   
+                        async: false,
+                        success : function(text)
+                        {
+                            response = JSON.stringify(text);
+                        }
+                    });
+                    if(response){
+                        let arrayData = response.split(",");
+                        arrayData.forEach(data =>{
+                            let info = document.createElement("h5");
+                            info.innerText = data;
+                            container.appendChild(info)
+                        })
+                    }else{
+                        container.innerHTML = `<h5>Connected but no data from ${testUrl}, try another URL.</h5>`;
                     }
-            });
-            if(response){
-                let arrayData = response.split(",");
-                arrayData.forEach(data =>{
-                    let info = document.createElement("h5");
-                    info.innerText = data;
-                    container.appendChild(info)
-                })
-            }else{
-                container.innerHTML = `<h5>Connected but no data from ${testUrl}, try another URL.</h5>`;
-            }
+            })
         }
     </script>
 </body>
